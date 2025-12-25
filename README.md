@@ -17,9 +17,13 @@ This research aims to benchmark and evaluate different Large Language Model (LLM
 - [x] **Phase 1: Data Extraction** (Implemented)
     - Context-aware parsing using `pymupdf4llm`.
     - Preservation of tables, headers, and hierarchical structure.
-- [ ] **Phase 2: Vector Embedding & RAG** (Planned)
-- [ ] **Phase 3: Knowledge Graph Construction** (Planned)
-- [ ] **Phase 4: Fine-Tuning (SFT) & Evaluation** (Planned)
+- [x] **Phase 2: Data Chunking** (Implemented)
+    - Structure-aware chunking for text vs tabular sections
+    - Context preservation via overlap and section metadata
+    - End-to-end JSONL processing pipeline for embeddings"
+- [ ] **Phase 3: Vector Embedding & RAG** (Planned)
+- [ ] **Phase 4: Knowledge Graph Construction** (Planned)
+- [ ] **Phase 5: Fine-Tuning (SFT) & Evaluation** (Planned)
 
 ## 🛠️ Installation
 

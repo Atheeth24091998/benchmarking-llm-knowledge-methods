@@ -1,6 +1,7 @@
 # .gitignore
 
 # Data directories (Keep these local only)
+data/
 raw_data/
 extracted/
 processed/
