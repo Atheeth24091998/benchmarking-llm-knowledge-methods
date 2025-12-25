@@ -1,6 +1,10 @@
-chunk_size: 512
+chunking:
+  max_rows: 15
+  max_tokens: 500
+  min_tokens: 40
 top_k: 5
 model_name: sentence-transformers/all-MiniLM-L6-v2
 faiss_index_path: data/faiss.index
 raw_data_path: "/home/athenaik/MASTER_THESIS/data/raw"
 extracted_data_path: "/home/athenaik/MASTER_THESIS/data/extracted"
+processed_data_path: "/home/athenaik/MASTER_THESIS/data/processed"

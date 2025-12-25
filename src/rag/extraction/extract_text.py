@@ -1,3 +1,45 @@
+###################################################################################################################################################################
+"""
+DOCUMENTATION & HELPER LOGIC
+----------------------------
+
+1. is_noise(line)
+   - Inp: Raw text line.
+   - Out: Boolean.
+   - Desc: Detects non-content lines like page footers, figure captions, or running headers to prevent them from polluting the text.
+
+2. is_section_heading(line)
+   - Inp: Raw text line.
+   - Out: Tuple (section_number, title) or None.
+   - Desc: Regex-based detector that identifies hierarchical headers (e.g., "**1.1.3** Technical Data") to signal the start of a new semantic block.
+
+3. clean_text(text)
+   - Inp: Raw text string.
+   - Out: Cleaned string.
+   - Desc: Removes trailing whitespace and collapses empty lines to ensure compact, readable text for the LLM.
+
+4. extract_sections_from_pages(pages)
+   - Inp: List of page objects (from pymupdf4llm).
+   - Out: List of structured section dictionaries.
+   - Desc: The core logic that iterates through every line of the PDF, grouping content under the most recent active header (stateful parsing).
+
+5. create_section_object(section_info, content_lines, pages)
+   - Inp: Header metadata, list of text lines, and page numbers.
+   - Out: Final dictionary object for the section.
+   - Desc: Assembles the raw data into a structured object, calculates metadata (like 'has_table'), and formats the section numbers.
+
+6. process_pdf(pdf_path)
+   - Inp: Path to the input PDF file.
+   - Out: None (Writes output to disk).
+   - Desc: Orchestrator function that converts PDF to Markdown, runs the section extractor, and saves the result.
+
+7. save_sections(sections, out_file, doc_id)
+   - Inp: List of section objects, output path, and document ID.
+   - Out: None (Writes file).
+   - Desc: Helper to serialize the extracted data into line-delimited JSON (JSONL) format.
+"""
+###################################################################################################################################################################
+
 import json
 import re
 from pathlib import Path
