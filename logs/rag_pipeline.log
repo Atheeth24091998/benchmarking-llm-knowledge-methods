@@ -1,0 +1,31 @@
+2025-12-25 10:47:28 | INFO | __main__ | Extracting machine_manual-9-17
+2025-12-25 10:47:32 | INFO | __main__ | Saved extraction to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 10:59:47 | INFO | __main__ | Extracting machine_manual-9-17
+2025-12-25 10:59:51 | INFO | __main__ | Saved extraction to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 11:03:17 | INFO | __main__ | Extracting machine_manual-9-17
+2025-12-25 11:03:21 | INFO | __main__ | Saved extraction to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 11:07:45 | INFO | __main__ | Extracting machine_manual-9-17
+2025-12-25 11:07:49 | INFO | __main__ | Saved extraction to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 11:10:39 | INFO | __main__ | Extracting machine_manual-9-17
+2025-12-25 11:10:43 | INFO | __main__ | Saved extraction to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 11:34:42 | WARNING | __main__ | tiktoken not installed. Using character-based estimation.
+2025-12-25 11:34:42 | INFO | __main__ | Processing machine_manual-9-17
+2025-12-25 11:34:46 | INFO | __main__ | Extracted 33 blocks from machine_manual-9-17
+2025-12-25 11:34:46 | INFO | __main__ | Created 23 sections
+2025-12-25 11:34:46 | INFO | __main__ | Optimized to 4 chunks
+2025-12-25 11:34:46 | INFO | __main__ | Saved to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 11:44:23 | INFO | __main__ | Processing machine_manual-9-17
+2025-12-25 11:44:27 | INFO | __main__ | Extracted 21 sections from machine_manual-9-17
+2025-12-25 11:44:27 | INFO | __main__ | Saved to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 11:51:46 | INFO | __main__ | Processing machine_manual-9-17
+2025-12-25 11:51:50 | INFO | __main__ | Extracted 12 sections from machine_manual-9-17
+2025-12-25 11:51:50 | INFO | __main__ | Saved to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 11:58:12 | INFO | __main__ | Processing machine_manual-9-17
+2025-12-25 11:58:16 | INFO | __main__ | Extracted 12 sections from machine_manual-9-17
+2025-12-25 11:58:16 | INFO | __main__ | Saved to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 12:00:38 | INFO | __main__ | Processing machine_manual-9-17
+2025-12-25 12:00:42 | INFO | __main__ | Extracted 12 sections from machine_manual-9-17
+2025-12-25 12:00:42 | INFO | __main__ | Saved to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl
+2025-12-25 12:01:50 | INFO | __main__ | Processing machine_manual-9-17
+2025-12-25 12:01:54 | INFO | __main__ | Extracted 12 sections from machine_manual-9-17
+2025-12-25 12:01:54 | INFO | __main__ | Saved to /home/athenaik/MASTER_THESIS/data/extracted/machine_manual-9-17.jsonl

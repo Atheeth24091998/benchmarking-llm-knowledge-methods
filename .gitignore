@@ -1,0 +1,15 @@
+# .gitignore
+
+# Data directories (Keep these local only)
+data/
+raw_data/
+extracted_data/
+
+# Python artifacts
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Python virtual environment
+.venv/

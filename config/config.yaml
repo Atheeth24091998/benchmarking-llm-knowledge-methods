@@ -1,0 +1,6 @@
+chunk_size: 512
+top_k: 5
+model_name: sentence-transformers/all-MiniLM-L6-v2
+faiss_index_path: data/faiss.index
+raw_data_path: "/home/athenaik/MASTER_THESIS/data/raw"
+extracted_data_path: "/home/athenaik/MASTER_THESIS/data/extracted"
