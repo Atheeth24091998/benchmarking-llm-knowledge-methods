@@ -1,16 +1,19 @@
-# .gitignore
+# ==============================
+# Data directories
+# Track folder structure, ignore contents
+# ==============================
+data/**
+!data/**/.gitkeep
 
-# Data directories (Keep these local only)
-data/
-raw_data/
-extracted/
-processed/
-
+# ==============================
 # Python artifacts
+# ==============================
 __pycache__/
 *.pyc
-venv/
-.env
 
-# Python virtual environment
+# Virtual environments
+venv/
 .venv/
+
+# Environment variables
+.env

@@ -11,7 +11,7 @@ This research aims to benchmark and evaluate different Large Language Model (LLM
 1.  **RAG (Retrieval-Augmented Generation):** Baseline retrieval using vector similarity.
 2.  **GraphRAG:** Knowledge-graph enhanced retrieval to preserve structural relationships between components.
 3.  **SFT (Supervised Fine-Tuning):** Domain-specific model tuning on extracted manual sections.
-4.  **RLHF (Reinforcement Learning from Human Feedback):** Alignment optimization (future scope).
+4.  **RLKGF (Reinforcement Learning from Knowledge Grapgh Feedback):** Alignment optimization (future scope).
 
 ## 🚀 Current Status
 - [x] **Phase 1: Data Extraction** (Implemented)
@@ -21,13 +21,15 @@ This research aims to benchmark and evaluate different Large Language Model (LLM
     - Structure-aware chunking for text vs tabular sections
     - Context preservation via overlap and section metadata
     - End-to-end JSONL processing pipeline for embeddings"
-- [ ] **Phase 3: Vector Embedding & RAG** (Planned)
-- [ ] **Phase 4: Knowledge Graph Construction** (Planned)
-- [ ] **Phase 5: Fine-Tuning (SFT) & Evaluation** (Planned)
-
-## 🛠️ Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/](https://github.com/)[your-username]/thesis-llm-optimization-benchmark.git
-   cd thesis-llm-optimization-benchmark
+- [X] **Phase 3: Vector Embedding & RAG** (Implemented)
+    - Embedding Generation: Utilizes sentence-transformers/all-MiniLM-L6-v2 for encoding text chunks into 384-dimensional dense vectors
+    - Vector Storage: FAISS IndexFlatIP implementation for efficient cosine similarity search via inner product
+    - Semantic Retrieval: Top-k retrieval with configurable batch processing and similarity scoring
+    - LLM Integration: Llama-2-7b for context-aware answer generation from retrieved chunks
+​
+End-to-end Pipeline: Automated workflow from query encoding → retrieval → context injection → generation
+- [ ] **RAG Eveluation metrics** (Planned)
+- [ ] **RAG Documentation** (Planned)
+- [ ] **Knowledge Graph Construction** (Planned)
+- [ ] **Fine-Tuning (SFT) & Evaluation** (Planned)
+- [ ] **RLKGF Implementation and Evaluation** (Planned)
