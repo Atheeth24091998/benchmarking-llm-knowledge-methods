@@ -5,8 +5,7 @@ def main():
     store = FaissVectorStore()
     store.load()
     print("Vector store loaded.")
-    #query = input("Ask a question: ")
-    query = "Applied standards are .. ?" 
+    query = "During operation, bubble off center y axis, precision loss and transfer errors occur. Identify the problem and suggest corrective actions." 
     print(f"Query: {query!r}")
 
     print("Retrieving chunks...")

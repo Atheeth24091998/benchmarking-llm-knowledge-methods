@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer
 
 from src.rag.utils.config_loader import load_config
 from src.rag.utils.logger import get_logger
-
+import torch
 logger = get_logger(__name__)
 config = load_config()
 
@@ -20,7 +20,9 @@ class FaissVectorStore:
         self,
         model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
     ):
-        self.model = SentenceTransformer(model_name)
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Initializing embedding model on {device}")
+        self.model = SentenceTransformer(model_name, device=device)
         self.index = None
         self.metadata = None
 
@@ -36,6 +38,13 @@ class FaissVectorStore:
 
         # Cosine similarity via inner product
         self.index = faiss.IndexFlatIP(dim)
+
+        # if torch.cuda.is_available():
+        #     res = faiss.StandardGpuResources()
+        #     self.index = faiss.GpuIndexFlatIP(res, dim)
+        # else:
+        #     self.index = faiss.IndexFlatIP(dim)
+
         self.index.add(embeddings)
 
         logger.info(f"FAISS index built with {self.index.ntotal} vectors")
@@ -47,7 +56,8 @@ class FaissVectorStore:
 
         query_embedding = self.model.encode(
             [query],
-            normalize_embeddings=True
+            normalize_embeddings=True,
+            convert_to_numpy=True
         )
 
         scores, indices = self.index.search(query_embedding, top_k)

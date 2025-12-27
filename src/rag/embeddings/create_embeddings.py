@@ -1,7 +1,7 @@
 import json
 import time
 from pathlib import Path
-
+import torch
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
@@ -33,6 +33,11 @@ def load_chunks():
 def create_embeddings(texts, model_name="sentence-transformers/all-MiniLM-L6-v2"):
     """Encode texts into embeddings."""
     logger.info(f"Loading embedding model: {model_name}")
+    
+    # Auto-detect device
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    logger.info(f"Using device: {device}")
+
     model = SentenceTransformer(model_name)
 
     start = time.time()
@@ -40,7 +45,8 @@ def create_embeddings(texts, model_name="sentence-transformers/all-MiniLM-L6-v2"
         texts,
         batch_size=batch_size,
         show_progress_bar=True,
-        normalize_embeddings=True
+        normalize_embeddings=True,
+        convert_to_numpy=True
     )
     elapsed = time.time() - start
 
