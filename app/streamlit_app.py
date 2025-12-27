@@ -3,6 +3,9 @@ import streamlit as st
 from src.rag.vectorstore.faiss_store import FaissVectorStore
 from src.rag.generator.generate import generate_answer
 from src.rag.evaluation.metrics import run_evaluation
+from src.graph_rag.linking.entity_linker import EntityLinker
+from src.graph_rag.retrieval.subgraph_retriever import SubgraphRetriever
+from src.graph_rag.generator.generate import GraphAnswerGenerator
 
 # -------------------------
 # Page config
@@ -20,7 +23,12 @@ st.caption("Ask questions or evaluate the RAG system")
 # -------------------------
 mode = st.radio(
     "Choose mode",
-    ["🔍 Ask a Question", "🧪 Run Evaluation"],
+    [
+        "🔍 Vector RAG – Ask",
+        "🧠 Graph RAG – Ask",
+        "🧪 Vector RAG – Evaluate",
+        "🧪 Graph RAG – Evaluate"
+    ],
     horizontal=True
 )
 
@@ -64,6 +72,55 @@ if mode == "🔍 Ask a Question":
                 st.write(chunk["text"])
                 st.markdown("---")
 
+elif mode == "🧠 Graph RAG – Ask":
+
+
+
+    query = st.text_input("Enter your question")
+
+    if st.button("🧠 Ask with Graph RAG"):
+
+        linker = EntityLinker()
+        retriever = SubgraphRetriever()
+        generator = GraphAnswerGenerator()
+
+        problem, score = linker.link(query)
+        subgraph = retriever.retrieve(problem)
+        answer = generator.generate(query, subgraph)
+
+        st.subheader("✅ Graph RAG Answer")
+        st.write(answer)
+
+        with st.expander("🧠 Graph Facts Used"):
+            st.json(subgraph)
+
+elif mode == "🧪 Graph RAG – Evaluate":
+
+    from src.graph_rag.evaluation.metrics import run_graph_evaluation
+
+    test_size = st.slider("Test set size", 1, 100, 10)
+
+    if st.button("▶ Run Graph RAG Evaluation"):
+
+        with st.spinner("Evaluating Graph RAG..."):
+            results = run_graph_evaluation(test_size)
+
+        st.success("Graph RAG Evaluation Complete ✅")
+
+        col1, col2, col3 = st.columns(3)
+
+        col1.metric("Semantic Similarity", f"{results['semantic_similarity']:.3f}")
+        col1.metric("Faithfulness", f"{results['faithfulness']:.3f}")
+        col1.metric("Hallucination", f"{results['hallucination']:.3f}")
+
+        col2.metric("Cause F1", f"{results['cause_f1']:.3f}")
+        col2.metric("Action F1", f"{results['action_f1']:.3f}")
+
+        col3.metric("Latency (s)", f"{results['latency']:.2f}")
+        col3.metric("rouge",f"{results['rouge']:.3f}")
+        col3.metric("bert",f"{results['bert']:.3f}")
+
+
 # =========================================================
 # 🧪 MODE 2: Run evaluation
 # =========================================================
@@ -95,3 +152,5 @@ else:
         col2.metric("Action F1", f"{results['action_f1']:.3f}")
 
         col3.metric("Latency (s)", f"{results['latency']:.2f}")
+        col3.metric("rouge_l",f"{results['rouge_l']:.3f}")
+        col3.metric("bert_score",f"{results['bert_score']:.3f}")

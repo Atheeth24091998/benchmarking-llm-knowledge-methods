@@ -12,3 +12,11 @@ processed_data_path: "/home/athenaik/MASTER_THESIS/data/processed"
 embeddings_data_path: "/home/athenaik/MASTER_THESIS/data/embeddings"
 test_data_path: "/home/athenaik/MASTER_THESIS/data/test_data/test_questions.jsonl"
 top_k: 5
+graph_rag:
+  neo4j:
+    uri: "neo4j+s://50d89f74.databases.neo4j.io"
+    user: "neo4j"
+    password: "Xi-9J1fP7m6Xo0hsfuTkrAOLP5H3FrpDQlWCx1isKjk"   
+paths:
+  graph_data: "/home/athenaik/MASTER_THESIS/data/graphrag/raw/train.json"
+  logs: "logs"

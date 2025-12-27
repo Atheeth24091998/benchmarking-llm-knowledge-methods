@@ -77,3 +77,48 @@ Only use information from the manual context. If information is missing, write "
     answer = answer.replace("<|end_header_id|>", "").strip()
     
     return answer
+
+
+def generate_graph_answer(prompt: str) -> str:
+    """
+    Graph RAG generation: prompt already contains structured graph facts.
+    """
+
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are an industrial troubleshooting assistant. "
+                "Answer ONLY using the provided graph facts. "
+                "Do NOT use external knowledge. "
+                "If information is missing, say 'Not available in the knowledge graph'."
+            )
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+
+    chat_prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+
+    inputs = tokenizer(chat_prompt, return_tensors="pt").to(model.device)
+
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=300,
+        temperature=0.0,   # IMPORTANT: deterministic
+        do_sample=False,
+        pad_token_id=tokenizer.eos_token_id
+    )
+
+    answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+    if "assistant" in answer:
+        answer = answer.split("assistant")[-1].strip()
+
+    return answer

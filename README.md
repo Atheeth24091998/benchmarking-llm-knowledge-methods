@@ -26,10 +26,18 @@ This research aims to benchmark and evaluate different Large Language Model (LLM
     - Vector Storage: FAISS IndexFlatIP implementation for efficient cosine similarity search via inner product
     - Semantic Retrieval: Top-k retrieval with configurable batch processing and similarity scoring
     - LLM Integration: Llama-2-7b for context-aware answer generation from retrieved chunks
-​
-End-to-end Pipeline: Automated workflow from query encoding → retrieval → context injection → generation
-- [ ] **RAG Eveluation metrics** (Planned)
-- [ ] **RAG Documentation** (Planned)
-- [ ] **Knowledge Graph Construction** (Planned)
+​- [X] **RAG Eveluation metrics** (Partially done)
+    - Evaluation metrics such as semantic_similarity, bert_score, hallucination .etc has been implemnted and tested.
+    - The results are displayed in Stremlit application.
+    - I see some issues in the metrics being calculated, need to debug and test again.
+- [X] **Knowledge Graph Construction** (Partially done)
+    - Implemntation of the Grapgh Rag has been done.
+    - Visualisation is done in Neo4j
+    - Evaluation metrics such as semantic_similarity, bert_score, hallucination .etc has been implemnted and tested.
+    - The results are displayed in Stremlit application.
+    - I see some issues in the metrics being calculated, need to debug and test again.
 - [ ] **Fine-Tuning (SFT) & Evaluation** (Planned)
+- [ ] **RAG Documentation** (Planned)
+- [ ] **GraphRAG Documentation** (Planned)
 - [ ] **RLKGF Implementation and Evaluation** (Planned)
+
