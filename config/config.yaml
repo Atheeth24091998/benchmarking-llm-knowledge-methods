@@ -20,3 +20,8 @@ graph_rag:
 paths:
   graph_data: "/home/athenaik/MASTER_THESIS/data/graphrag/raw/train.json"
   logs: "logs"
+sft_paths:
+  train_raw_sft_data: "/home/athenaik/MASTER_THESIS/data/sft/raw/train.json"
+  val_raw_sft_data: "/home/athenaik/MASTER_THESIS/data/sft/raw/val.json"
+  test_raw_sft_data: "/home/athenaik/MASTER_THESIS/data/sft/raw/test.json"
+  processed_sft_path: "/home/athenaik/MASTER_THESIS/data/sft/processed"
