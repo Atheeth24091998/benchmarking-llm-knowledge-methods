@@ -6,9 +6,10 @@ from peft import PeftModel
 
 from src.graph_rag.utils.config_loader import load_config
 
+config = load_config()
 
-MODEL_NAME = "meta-llama/Llama-3.1-8B-Instruct"
-ADAPTER_PATH = "models/sft_lora/final"
+MODEL_NAME = config["sft_inference"]["model"]["name_or_path"]
+ADAPTER_PATH = config["sft_inference"]["model"]["adapter_path"]
 
 
 def build_prompt(sample):
@@ -36,6 +37,14 @@ def build_prompt(sample):
     ]
     return messages
 
+def replace_underscores(obj):
+    if isinstance(obj, str):
+        return obj.replace("_", " ")
+    elif isinstance(obj, dict):
+        return {k: replace_underscores(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [replace_underscores(v) for v in obj]
+    return obj
 
 def main():
     config = load_config()
@@ -84,9 +93,9 @@ def main():
             with torch.no_grad():
                 outputs = model.generate(
                     **inputs,
-                    max_new_tokens=300,
-                    temperature=0.1,
-                    do_sample=False,
+                    max_new_tokens=config["sft_inference"]["generation"]["max_new_tokens"],
+                    temperature=config["sft_inference"]["generation"]["temperature"],
+                    do_sample=config["sft_inference"]["generation"]["do_sample"],
                     pad_token_id=tokenizer.eos_token_id,
                 )
 
@@ -99,6 +108,8 @@ def main():
             if "assistant" in decoded:
                 decoded = decoded.split("assistant")[-1].strip()
 
+            decoded = decoded.replace("_", " ")
+            sample = replace_underscores(sample)
             record = {
                 "prediction": decoded,
                 "ground_truth": sample
@@ -107,6 +118,86 @@ def main():
             f.write(json.dumps(record) + "\n")
 
     print(f"✅ SFT inference complete. Saved to {output_path}")
+
+def sft_infer(query):
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Using device: {device}")
+
+    # -------------------------
+    # Load tokenizer
+    # -------------------------
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    tokenizer.pad_token = tokenizer.eos_token
+
+    # -------------------------
+    # Load base model + LoRA
+    # -------------------------
+    base_model = AutoModelForCausalLM.from_pretrained(
+        MODEL_NAME,
+        torch_dtype=torch.float16,
+        device_map="auto"
+    )
+
+    model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
+    model.eval()
+
+    # -------------------------
+    # Load test data
+    # -------------------------
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are a technical support assistant for industrial machinery. "
+                "Your task is to diagnose machine problems and provide causes and "
+                "recommended actions based only on given symptoms."
+            )
+        },
+        {
+            "role": "user",
+            "content": (
+                f"The machine shows the following symptoms:\n"
+                f"{query}\n\n"
+                "Provide a structured troubleshooting response."
+            )
+        }
+    ]
+  
+
+
+
+
+
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=config["sft_inference"]["generation"]["max_new_tokens"],
+            temperature=config["sft_inference"]["generation"]["temperature"],
+            do_sample=config["sft_inference"]["generation"]["do_sample"],
+            pad_token_id=tokenizer.eos_token_id,
+        )
+
+    decoded = tokenizer.decode(
+        outputs[0],
+        skip_special_tokens=True
+    )
+
+    # keep only assistant answer
+    if "assistant" in decoded:
+        decoded = decoded.split("assistant")[-1].strip()
+
+    decoded = decoded.replace("_", " ")
+    
+    return decoded
 
 
 if __name__ == "__main__":

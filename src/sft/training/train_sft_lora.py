@@ -107,6 +107,7 @@ def main():
     # Train
     # -------------------------
     trainer.train()
+    print(trainer.state.log_history)
 
     # -------------------------
     # Save final adapter
