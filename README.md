@@ -1,7 +1,8 @@
 # Comparative Study of LLM Adaptation Techniques for Technical Manuals
 **Master's Thesis**
 **Author:** Atheeth Naik
-**University:** FAU Erlangen
+**University:** FAU Erlangen, Germany
+**Thesis Mentor** Ludwig Streloke ( FAPS FAU Erlangen, Germany)
 
 ---
 
@@ -36,8 +37,17 @@ This research aims to benchmark and evaluate different Large Language Model (LLM
     - Evaluation metrics such as semantic_similarity, bert_score, hallucination .etc has been implemnted and tested.
     - The results are displayed in Stremlit application.
     - I see some issues in the metrics being calculated, need to debug and test again.
-- [ ] **Fine-Tuning (SFT) & Evaluation** (Planned)
+- [X] **Fine-Tuning (SFT) & Evaluation** (Done)
+    - Implemented and tested the SFT usinbg LORA 
+    - Evaluation metrics for the SFT is also integrated and tested 
+    - Also results are displyed in the Streamlit application
+- [ ] **RLKGF Implementation and Evaluation** (Partially done)
+    - Implementation of RLKGF approachh initialy framework is created. However the training seems to give accuracy as zero always. 
+    - Debug and fixing the training issue
+    - Integrate the logging and test related code 
+    - integarte the results into the Streamlit application
+
 - [ ] **RAG Documentation** (Planned)
 - [ ] **GraphRAG Documentation** (Planned)
-- [ ] **RLKGF Implementation and Evaluation** (Planned)
-
+- [ ] **SFT Documentation** (Planned)
+- [ ] **RLKGF Documentation** (Planned)

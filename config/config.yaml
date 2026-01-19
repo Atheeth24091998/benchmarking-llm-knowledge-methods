@@ -38,3 +38,12 @@ sft_inference:
   sft_inference_paths:
     test_raw_sft_data: data/test_sft.json
     output_predictions: logs/sft_predictions.jsonl
+rlkgf:
+  model_name: "meta-llama/Llama-3.1-8B-Instruct"
+  kg_path: "data/rlkgf/kg"
+  alpha: 0.3  # Semantic weight (1-alpha for RWR)
+  restart_prob: 0.7
+  training:
+    epochs: 3
+    batch_size: 8
+    learning_rate: 1e-5

@@ -567,3 +567,18 @@ Computing batch metrics...
 2026-01-07 14:53:17 | INFO | src.rag.vectorstore.faiss_store | Initializing embedding model on cuda
 2026-01-07 14:53:18 | INFO | src.rag.vectorstore.faiss_store | Loading embeddings and metadata
 2026-01-07 14:53:18 | INFO | src.rag.vectorstore.faiss_store | FAISS index built with 168 vectors
+2026-01-12 09:53:58 | INFO | src.rag.vectorstore.faiss_store | Initializing embedding model on cuda
+2026-01-12 09:54:00 | INFO | src.rag.vectorstore.faiss_store | Loading embeddings and metadata
+2026-01-12 09:54:00 | INFO | src.rag.vectorstore.faiss_store | FAISS index built with 168 vectors
+2026-01-12 10:04:53 | INFO | src.rag.vectorstore.faiss_store | Initializing embedding model on cuda
+2026-01-12 10:04:55 | INFO | src.rag.vectorstore.faiss_store | Loading embeddings and metadata
+2026-01-12 10:04:55 | INFO | src.rag.vectorstore.faiss_store | FAISS index built with 168 vectors
+2026-01-15 16:12:36 | INFO | src.rag.vectorstore.faiss_store | Initializing embedding model on cuda
+2026-01-15 16:12:38 | INFO | src.rag.vectorstore.faiss_store | Loading embeddings and metadata
+2026-01-15 16:12:38 | INFO | src.rag.vectorstore.faiss_store | FAISS index built with 168 vectors
+2026-01-19 09:19:10 | INFO | src.rag.vectorstore.faiss_store | Initializing embedding model on cuda
+2026-01-19 09:19:12 | INFO | src.rag.vectorstore.faiss_store | Loading embeddings and metadata
+2026-01-19 09:19:12 | INFO | src.rag.vectorstore.faiss_store | FAISS index built with 168 vectors
+2026-01-19 09:43:42 | INFO | src.rag.vectorstore.faiss_store | Initializing embedding model on cuda
+2026-01-19 09:43:44 | INFO | src.rag.vectorstore.faiss_store | Loading embeddings and metadata
+2026-01-19 09:43:44 | INFO | src.rag.vectorstore.faiss_store | FAISS index built with 168 vectors
