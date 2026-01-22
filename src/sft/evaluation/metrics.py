@@ -173,14 +173,14 @@ def run_sft_evaluation(test_size: int = 10) -> Dict[str, float]:
     for sample in predictions:
         pred_text = sample["prediction"]
         gt = sample["ground_truth"]
-        
+        gt_data = gt["ground_truth"]
         # Parse prediction
         parsed = parse_answer(pred_text)
         
         # Build ground truth text
-        gold_problem = gt["problem"].replace("_", " ")
-        gold_causes = [c.replace("_", " ") for c in gt["possible_causes"]]
-        gold_actions = [a.replace("_", " ") for a in gt["recommended_actions"]]
+        gold_problem = gt_data["problem"].replace("_", " ")
+        gold_causes = [c.replace("_", " ") for c in gt_data["possible_causes"]]
+        gold_actions = [a.replace("_", " ") for a in gt_data["recommended_actions"]]
         
         # Full text comparison
         pred_full = f"{parsed['problem']}. {' '.join(parsed['causes'])}. {' '.join(parsed['actions'])}"

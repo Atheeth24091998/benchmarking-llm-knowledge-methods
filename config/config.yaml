@@ -37,7 +37,7 @@ sft_inference:
     do_sample: false
   sft_inference_paths:
     test_raw_sft_data: data/test_sft.json
-    output_predictions: logs/sft_predictions.jsonl
+    output_predictions: logs/sft_predictions_all_data.jsonl
 rlkgf:
   model_name: "meta-llama/Llama-3.1-8B-Instruct"
   kg_path: "data/rlkgf/kg"

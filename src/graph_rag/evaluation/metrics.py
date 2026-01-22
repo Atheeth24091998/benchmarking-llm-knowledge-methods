@@ -112,7 +112,7 @@ def load_test_data(path: Path) -> List[Dict]:
 def run_graph_evaluation(test_size: int) -> Dict[str, float]:
 
     data_path = Path(config["test_data_path"])
-    test_data = load_test_data(data_path)[:10]
+    test_data = load_test_data(data_path)[:test_size]
 
     linker = EntityLinker()
     retriever = SubgraphRetriever()
@@ -167,7 +167,7 @@ def run_graph_evaluation(test_size: int) -> Dict[str, float]:
         faith = 1.0 if linked_problem == sample["question"] else 0.5
 
         rouge = compute_rouge_l(pred_full, gold_full)
-        bert = compute_bertscore(pred_full, gold_full)
+        bert = compute_bertscore([pred_full], [gold_full])
 
         metrics["semantic_similarity"].append(sim)
         metrics["cause_f1"].append(cause_f1)

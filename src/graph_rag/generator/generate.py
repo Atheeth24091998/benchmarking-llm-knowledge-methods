@@ -45,13 +45,31 @@ class GraphAnswerGenerator:
         if not subgraph:
             return "No graph information available."
 
+        # prompt = GRAPH_RAG_PROMPT.format(
+        #     problem=subgraph["problem"].replace("_", " "),
+        #     explicit_symptoms=", ".join(subgraph["explicit_symptoms"]) or "None",
+        #     implicit_symptoms=", ".join(subgraph["implicit_symptoms"]) or "None",
+        #     possible_causes=", ".join(subgraph["possible_causes"]) or "None",
+        #     recommended_actions=", ".join(subgraph["recommended_actions"]) or "None",
+        #     question=question,
+        # )
+
+        def safe_text(value, default="None"):
+            if value is None:
+                return default
+            if isinstance(value, str):
+                return value.replace("_", " ")
+            if isinstance(value, list):
+                return ", ".join(v.replace("_", " ") for v in value if v)
+            return default
+
         prompt = GRAPH_RAG_PROMPT.format(
-            problem=subgraph["problem"].replace("_", " "),
-            explicit_symptoms=", ".join(subgraph["explicit_symptoms"]) or "None",
-            implicit_symptoms=", ".join(subgraph["implicit_symptoms"]) or "None",
-            possible_causes=", ".join(subgraph["possible_causes"]) or "None",
-            recommended_actions=", ".join(subgraph["recommended_actions"]) or "None",
-            question=question,
+            problem=safe_text(subgraph.get("problem"), "Unknown problem"),
+            explicit_symptoms=safe_text(subgraph.get("explicit_symptoms")),
+            implicit_symptoms=safe_text(subgraph.get("implicit_symptoms")),
+            possible_causes=safe_text(subgraph.get("possible_causes")),
+            recommended_actions=safe_text(subgraph.get("recommended_actions")),
+            question=question.replace("_", " "),
         )
 
         logger.info("Generating Graph RAG answer")

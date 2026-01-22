@@ -10,7 +10,8 @@ from src.graph_rag.linking.entity_linker import EntityLinker
 from src.graph_rag.retrieval.subgraph_retriever import SubgraphRetriever
 from src.graph_rag.generator.generate import GraphAnswerGenerator
 from src.sft.inference.infer_sft import sft_infer
-
+from src.sft.evaluation.metrics import run_sft_evaluation
+from pathlib import Path
 
 # -------------------------
 # Page config
@@ -157,7 +158,7 @@ elif mode == "🧪 Vector RAG - Evaluate":
     test_size = st.slider(
         "Test set size",
         min_value=1,
-        max_value=100,
+        max_value=144,
         value=10,
         step=1
     )
@@ -191,7 +192,7 @@ elif mode == "🧪 Graph RAG - Evaluate":
 
     from src.graph_rag.evaluation.metrics import run_graph_evaluation
 
-    test_size = st.slider("Test set size", 1, 100, 10)
+    test_size = st.slider("Test set size", 1, 144, 10)
 
     if st.button("▶ Run Graph RAG Evaluation"):
 
@@ -220,12 +221,9 @@ elif mode == "🧪 Graph RAG - Evaluate":
 
 elif mode == "🧪 SFT Model - Evaluate":
     
-    from src.sft.evaluation.metrics import run_sft_evaluation
-    from pathlib import Path
-    
     st.subheader("🧪 SFT Model Evaluation")
     
-    pred_path = Path("logs/sft_predictions.jsonl")
+    pred_path = Path("logs/sft_predictions_all_data.jsonl")
     
     if not pred_path.exists():
         st.warning("⚠️ No predictions found. Run inference first:")

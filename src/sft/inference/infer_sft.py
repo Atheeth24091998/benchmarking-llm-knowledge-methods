@@ -1,6 +1,336 @@
+# import json
+# from pathlib import Path
+# import torch
+# from transformers import AutoTokenizer, AutoModelForCausalLM
+# from peft import PeftModel
+
+# from src.graph_rag.utils.config_loader import load_config
+
+# config = load_config()
+
+# MODEL_NAME = config["sft_inference"]["model"]["name_or_path"]
+# ADAPTER_PATH = config["sft_inference"]["model"]["adapter_path"]
+
+
+# def build_prompt(sample):
+#     symptoms = sample["explicit_symptoms"] + sample["implicit_symptoms"]
+
+#     symptom_text = "\n".join([f"- {s.replace('_', ' ')}" for s in symptoms])
+
+#     messages = [
+#         {
+#             "role": "system",
+#             "content": (
+#                 "You are a technical support assistant for industrial machinery. "
+#                 "Your task is to diagnose machine problems and provide causes and "
+#                 "recommended actions based only on given symptoms."
+#             )
+#         },
+#         {
+#             "role": "user",
+#             "content": (
+#                 f"The machine shows the following symptoms:\n"
+#                 f"{symptom_text}\n\n"
+#                 "Provide a structured troubleshooting response."
+#             )
+#         }
+#     ]
+#     return messages
+
+# def replace_underscores(obj):
+#     if isinstance(obj, str):
+#         return obj.replace("_", " ")
+#     elif isinstance(obj, dict):
+#         return {k: replace_underscores(v) for k, v in obj.items()}
+#     elif isinstance(obj, list):
+#         return [replace_underscores(v) for v in obj]
+#     return obj
+
+# def main():
+#     config = load_config()
+#     test_path = Path(config["sft_paths"]["test_raw_sft_data"])
+#     output_path = Path("logs/sft_predictions.jsonl")
+#     output_path.parent.mkdir(parents=True, exist_ok=True)
+
+#     device = "cuda" if torch.cuda.is_available() else "cpu"
+#     print(f"Using device: {device}")
+
+#     # -------------------------
+#     # Load tokenizer
+#     # -------------------------
+#     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+#     tokenizer.pad_token = tokenizer.eos_token
+
+#     # -------------------------
+#     # Load base model + LoRA
+#     # -------------------------
+#     base_model = AutoModelForCausalLM.from_pretrained(
+#         MODEL_NAME,
+#         torch_dtype=torch.float16,
+#         device_map="auto"
+#     )
+
+#     model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
+#     model.eval()
+
+#     # -------------------------
+#     # Load test data
+#     # -------------------------
+#     test_data = json.loads(test_path.read_text())
+  
+#     with output_path.open("w") as f:
+#         for sample in test_data:
+#             messages = build_prompt(sample)
+
+#             prompt = tokenizer.apply_chat_template(
+#                 messages,
+#                 tokenize=False,
+#                 add_generation_prompt=True
+#             )
+
+#             inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+#             with torch.no_grad():
+#                 outputs = model.generate(
+#                     **inputs,
+#                     max_new_tokens=config["sft_inference"]["generation"]["max_new_tokens"],
+#                     temperature=config["sft_inference"]["generation"]["temperature"],
+#                     do_sample=config["sft_inference"]["generation"]["do_sample"],
+#                     pad_token_id=tokenizer.eos_token_id,
+#                 )
+
+#             decoded = tokenizer.decode(
+#                 outputs[0],
+#                 skip_special_tokens=True
+#             )
+
+#             # keep only assistant answer
+#             if "assistant" in decoded:
+#                 decoded = decoded.split("assistant")[-1].strip()
+
+#             decoded = decoded.replace("_", " ")
+#             sample = replace_underscores(sample)
+#             record = {
+#                 "prediction": decoded,
+#                 "ground_truth": sample
+#             }
+
+#             f.write(json.dumps(record) + "\n")
+
+#     print(f"✅ SFT inference complete. Saved to {output_path}")
+
+# def sft_infer(query):
+
+#     device = "cuda" if torch.cuda.is_available() else "cpu"
+#     print(f"Using device: {device}")
+
+#     # -------------------------
+#     # Load tokenizer
+#     # -------------------------
+#     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+#     tokenizer.pad_token = tokenizer.eos_token
+
+#     # -------------------------
+#     # Load base model + LoRA
+#     # -------------------------
+#     base_model = AutoModelForCausalLM.from_pretrained(
+#         MODEL_NAME,
+#         torch_dtype=torch.float16,
+#         device_map="auto"
+#     )
+
+#     model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
+#     model.eval()
+
+#     # -------------------------
+#     # Load test data
+#     # -------------------------
+#     messages = [
+#         {
+#             "role": "system",
+#             "content": (
+#                 "You are a technical support assistant for industrial machinery. "
+#                 "Your task is to diagnose machine problems and provide causes and "
+#                 "recommended actions based only on given symptoms."
+#             )
+#         },
+#         {
+#             "role": "user",
+#             "content": (
+#                 f"The machine shows the following symptoms:\n"
+#                 f"{query}\n\n"
+#                 "Provide a structured troubleshooting response."
+#             )
+#         }
+#     ]
+  
+#     prompt = tokenizer.apply_chat_template(
+#         messages,
+#         tokenize=False,
+#         add_generation_prompt=True
+#     )
+
+#     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+#     with torch.no_grad():
+#         outputs = model.generate(
+#             **inputs,
+#             max_new_tokens=config["sft_inference"]["generation"]["max_new_tokens"],
+#             temperature=config["sft_inference"]["generation"]["temperature"],
+#             do_sample=config["sft_inference"]["generation"]["do_sample"],
+#             pad_token_id=tokenizer.eos_token_id,
+#         )
+
+#     decoded = tokenizer.decode(
+#         outputs[0],
+#         skip_special_tokens=True
+#     )
+
+#     # keep only assistant answer
+#     if "assistant" in decoded:
+#         decoded = decoded.split("assistant")[-1].strip()
+
+#     decoded = decoded.replace("_", " ")
+    
+#     return decoded
+
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+
+# import json
+# from pathlib import Path
+# import torch
+# from transformers import AutoTokenizer, AutoModelForCausalLM
+# from peft import PeftModel
+# from tqdm import tqdm
+
+# from src.graph_rag.utils.config_loader import load_config
+
+# config = load_config()
+
+# MODEL_NAME = config["sft_inference"]["model"]["name_or_path"]
+# ADAPTER_PATH = config["sft_inference"]["model"]["adapter_path"]
+
+# def build_prompt(sample):
+#     messages = [
+#         {
+#             "role": "system",
+#             "content": (
+#                 "You are a technical support assistant for industrial machinery. "
+#                 "Your task is to diagnose machine problems and provide causes and "
+#                 "recommended actions based only on given symptoms."
+#             )
+#         },
+#         {
+#             "role": "user",
+#             "content": (
+#                 f"{sample['question']}\n\n"
+#                 "Provide a structured troubleshooting response."
+#             )
+#         }
+#     ]
+#     return messages
+
+# def replace_underscores(obj):
+#     if isinstance(obj, str):
+#         return obj.replace("_", " ")
+#     elif isinstance(obj, dict):
+#         return {k: replace_underscores(v) for k, v in obj.items()}
+#     elif isinstance(obj, list):
+#         return [replace_underscores(v) for v in obj]
+#     return obj
+
+# def main():
+#     config = load_config()
+#     test_path = Path(config["test_data_path"])
+#     output_path = Path("logs/sft_predictions_all_data.jsonl")
+#     output_path.parent.mkdir(parents=True, exist_ok=True)
+
+#     device = "cuda" if torch.cuda.is_available() else "cpu"
+#     print(f"Using device: {device}")
+
+#     # -------------------------
+#     # Load tokenizer
+#     # -------------------------
+#     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+#     tokenizer.pad_token = tokenizer.eos_token
+
+#     # -------------------------
+#     # Load base model + LoRA
+#     # -------------------------
+#     base_model = AutoModelForCausalLM.from_pretrained(
+#         MODEL_NAME,
+#         torch_dtype=torch.float16,
+#         device_map="auto"
+#     )
+
+#     model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
+#     model.eval()
+
+#     # -------------------------
+#     # Load test data
+#     # -------------------------
+#     # test_data = json.loads(test_path.read_text())
+  
+#     import json
+
+#     with open(test_path) as f:
+#         test_data = [json.loads(line) for line in f if line.strip()]
+
+#     with output_path.open("w") as f:
+#         for sample in test_data:
+#             messages = build_prompt(sample)
+
+#             prompt = tokenizer.apply_chat_template(
+#                 messages,
+#                 tokenize=False,
+#                 add_generation_prompt=True
+#             )
+
+#             inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+#             with torch.no_grad():
+#                 outputs = model.generate(
+#                     **inputs,
+#                     max_new_tokens=config["sft_inference"]["generation"]["max_new_tokens"],
+#                     temperature=config["sft_inference"]["generation"]["temperature"],
+#                     do_sample=config["sft_inference"]["generation"]["do_sample"],
+#                     pad_token_id=tokenizer.eos_token_id,
+#                 )
+
+#             decoded = tokenizer.decode(
+#                 outputs[0],
+#                 skip_special_tokens=True
+#             )
+
+#             # keep only assistant answer
+#             if "assistant" in decoded:
+#                 decoded = decoded.split("assistant")[-1].strip()
+
+#             decoded = decoded.replace("_", " ")
+#             sample = replace_underscores(sample)
+#             record = {
+#                 "prediction": decoded,
+#                 "ground_truth": sample
+#             }
+
+#             f.write(json.dumps(record) + "\n")
+
+#     print(f"✅ SFT inference complete. Saved to {output_path}")
+
+# if __name__ == "__main__":
+#     main()
+
+
 import json
 from pathlib import Path
+import time
 import torch
+from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
@@ -11,12 +341,7 @@ config = load_config()
 MODEL_NAME = config["sft_inference"]["model"]["name_or_path"]
 ADAPTER_PATH = config["sft_inference"]["model"]["adapter_path"]
 
-
 def build_prompt(sample):
-    symptoms = sample["explicit_symptoms"] + sample["implicit_symptoms"]
-
-    symptom_text = "\n".join([f"- {s.replace('_', ' ')}" for s in symptoms])
-
     messages = [
         {
             "role": "system",
@@ -29,8 +354,7 @@ def build_prompt(sample):
         {
             "role": "user",
             "content": (
-                f"The machine shows the following symptoms:\n"
-                f"{symptom_text}\n\n"
+                f"{sample['question']}\n\n"
                 "Provide a structured troubleshooting response."
             )
         }
@@ -48,8 +372,8 @@ def replace_underscores(obj):
 
 def main():
     config = load_config()
-    test_path = Path(config["sft_paths"]["test_raw_sft_data"])
-    output_path = Path("logs/sft_predictions.jsonl")
+    test_path = Path(config["test_data_path"])
+    output_path = Path("logs/sft_predictions_all_data.jsonl")
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -58,7 +382,7 @@ def main():
     # -------------------------
     # Load tokenizer
     # -------------------------
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=True)
     tokenizer.pad_token = tokenizer.eos_token
 
     # -------------------------
@@ -69,27 +393,36 @@ def main():
         torch_dtype=torch.float16,
         device_map="auto"
     )
-
     model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
     model.eval()
 
     # -------------------------
-    # Load test data
+    # Load test data (JSONL)
     # -------------------------
-    test_data = json.loads(test_path.read_text())
+    with open(test_path) as f:
+        test_data = [json.loads(line) for line in f if line.strip()]
 
+    # -------------------------
+    # Run inference with progress bar
+    # -------------------------
     with output_path.open("w") as f:
-        for sample in test_data:
+        for sample in tqdm(test_data, desc="SFT inference", unit="sample"):
+            start_time = time.time()
+
+            # Build chat messages
             messages = build_prompt(sample)
 
+            # Apply chat template
             prompt = tokenizer.apply_chat_template(
                 messages,
                 tokenize=False,
                 add_generation_prompt=True
             )
 
+            # Tokenize
             inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
+            # Generate predictions
             with torch.no_grad():
                 outputs = model.generate(
                     **inputs,
@@ -99,23 +432,24 @@ def main():
                     pad_token_id=tokenizer.eos_token_id,
                 )
 
-            decoded = tokenizer.decode(
-                outputs[0],
-                skip_special_tokens=True
-            )
-
-            # keep only assistant answer
+            # Decode output
+            decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
             if "assistant" in decoded:
                 decoded = decoded.split("assistant")[-1].strip()
-
             decoded = decoded.replace("_", " ")
-            sample = replace_underscores(sample)
+
+            # Clean sample
+            sample_clean = replace_underscores(sample)
+
+            # Save record
             record = {
                 "prediction": decoded,
-                "ground_truth": sample
+                "ground_truth": sample_clean
             }
-
             f.write(json.dumps(record) + "\n")
+
+            # Optional: per-sample time log
+            tqdm.write(f"Sample processed in {time.time() - start_time:.2f}s")
 
     print(f"✅ SFT inference complete. Saved to {output_path}")
 
@@ -164,11 +498,6 @@ def sft_infer(query):
         }
     ]
   
-
-
-
-
-
     prompt = tokenizer.apply_chat_template(
         messages,
         tokenize=False,
@@ -198,6 +527,7 @@ def sft_infer(query):
     decoded = decoded.replace("_", " ")
     
     return decoded
+
 
 
 if __name__ == "__main__":
